@@ -1,0 +1,214 @@
+<?php
+	session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" media="all" href="./resource/css/game.css" />
+
+    <!--[if lte IE 8]>
+    <script language="javascript" type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/excanvas.min.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.resize.min.js"></script>
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-gamequery/0.7.0/jquery.gamequery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
+
+    <script type="text/javascript" src="./library/Library.js"></script>
+    <script type="text/javascript" src="./class/Model.js"></script>
+</head>
+<body>
+<div id="container">
+    <div id="game_con">
+        <div id="game_graph">
+            <div id="playground" class="demo-container">
+                
+            </div>
+            <img src="resource/image/logo.png" id="boost_logo" alt="score888" />
+        </div>
+        
+        <div id="game_user">
+            <!-- 로그인 안된 상태 -->
+            <p class="logout">게임구매는 로그인 후 이용가능합니다.</p>
+            
+            <!-- 로그인 된 상태 -->
+            <div id="afterLogin">
+                <label>보유SP</label>
+                <input type="text" class="input_text" readonly="readeonly" value="0" />
+                <button id="sp_exchange" class="sp_btn">SP전환</button>
+                <button id="free_exchange" class="sp_btn">무료충전</button>
+            </div>
+        </div>
+        
+        <div id="into_info" class="g_tab">
+            <ul class="tab_navi">
+                <li><a href="#buy1" class="active">수동구매</a></li>
+                <li><a href="#buy2">자동구매</a></li>
+            </ul>
+
+            <div class="tab_con tab_con1" id="buy1">
+                <dl class="buy_button">
+                    <dt>SP금액선택</dt>
+                    <dd><button type="button" value="1000" class="on">1,000</button></dd>
+                    <dd><button type="button" value="5000">5,000</button></dd>
+                    <dd><button type="button" value="10000">10,000</button></dd>
+                    <dd><button type="button" value="50000">50,000</button></dd>
+                    <dd class="last"><button type="button" value="100000">100,000</button></dd>
+                </dl>
+
+                <div class="auto_stop">
+                    <h3>자동스탑</h3>
+                    <p>
+                        <span class="input"><input type="text" id="manual_stop" value="2"/></span>
+                        <span class="icon_x">x</span>
+                    </p>
+                </div>
+
+                <button type="button" id="btn_buy" class="buy_btns">로그인</button>
+            </div>
+
+            <div class="tab_con tab_con2" id="buy2">
+                <dl class="buy_button">
+                    <dt>자동 구매금 설정</dt>
+                    <dd><button type="button" value="1000" class="on">1,000</button></dd>
+                    <dd><button type="button" value="5000">5,000</button></dd>
+                    <dd><button type="button" value="10000">10,000</button></dd>
+                    <dd><button type="button" value="50000">50,000</button></dd>
+                    <dd class="last"><button type="button" value="100000">100,000</button></dd>
+                </dl>
+
+                <div class="auto_stop">
+                    <div class="auto_input">
+                        <h3>자동스탑 배율 설정</h3>
+                        <p>
+                            <span class="input"><input type="text" id="auto_stop" value="2"/></span>
+                            <span class="icon_x">x</span>
+                        </p>
+                    </div>
+                    <div class="auto_select">
+                        <h3>자동구매 횟수 설정</h3>
+                        <p>
+                            <select>
+                            </select>
+                        </p>
+                    </div>
+                </div>
+
+                <button type="button" id="btn_set" class="buy_btns">로그인</button>
+            </div>
+        </div>
+
+        <div id="recent_info">
+            <ul>
+            </ul>
+        </div>
+
+        <div id="into_list" class="g_tab">
+            <ul class="tab_navi">
+                <li><a href="#list1" class="active">참여리스트</a></li>
+                <li><a href="#list2">게임내역</a></li>
+            </ul>
+
+            <div class="tab_con tab_con1" id="list1">
+                <div class="list_title">
+                    <table>
+                        <colgroup>
+                            <col width="" />
+                            <col width="55" />
+                            <col width="60" />
+                            <col width="75" />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <td>닉네임</td>
+                                <td>수익률</td>
+                                <td>구매SP</td>
+                                <td>획득SP</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="list_con">
+                    <table>
+                        <colgroup>
+                            <col width="" />
+                            <col width="55" />
+                            <col width="60" />
+                            <col width="75" />
+                        </colgroup>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab_con tab_con2" id="list2">
+                <div class="list_title">
+                    <table>
+                        <colgroup>
+                            <col width="90" />
+                            <col width="70" />
+                            <col width="" />
+                            <col width="" />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <td>회차</td>
+                                <td>결과</td>
+                                <td>구매SP</td>
+                                <td>획득SP</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="list_con">
+                    <table>
+                        <colgroup>
+                            <col width="90" />
+                            <col width="70" />
+                            <col width="" />
+                            <col width="" />
+                        </colgroup>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="game_box">
+        <div id="game_view">
+            <div id="runground">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="b_layer_pop">
+    <a href="javascript:;" id="b_pop_close">X</a>
+    <p></p>
+</div>
+
+<script type="text/javascript" src="./class/View.js"></script>
+<script type="text/javascript" src="./class/Handler.js"></script>
+<script>
+    $(function(){
+        Handler.init();
+
+        if( parent && parent.gameFrame ){
+            parent.document.getElementById('gameFrame').height = document.body.scrollHeight + 'px';
+        }
+        if( top && top.mainFrame ){
+            top.mainFrame.height = document.body.scrollHeight + 'px';
+        }
+    });
+</script>
+</body>
+</html>
